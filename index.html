@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synthèse Interactive - Mon Conseil en Évolution Professionnelle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: A narrative, single-page scrolling application that guides the user through the story. It starts with the 'Situation' (the problem), moves to the 'Projet' (the proposed solution), and finishes with the 'Plan d'Action' (the execution). A new 'Complément d'information' section is added after the 'Situation' to provide deeper personal context and challenges, with specific phrases now highlighted in bold for emphasis. The 'Difficulté des enquêtes métier' section has been replaced with a more positive 'Point sur la phase d'enquête métier', detailing adapted research methods and now correctly using <b> tags for emphasis. This structure is more intuitive for a personal case file than a data-heavy dashboard. Key interactions include a visual timeline for the backstory, a funding breakdown chart, and an interactive toggle to compare the strategic hypotheses. This flow makes the information digestible and focuses on the journey towards the goal. -->
+    <!-- Visualization & Content Choices: 1. Timeline (HTML/CSS): Goal=Inform on health history -> Method=Vertical timeline -> Interaction=None, visual clarity is key -> Justification=Best way to show chronological events. 2. Funding Donut Chart (Chart.js): Goal=Compare cost vs. funding -> Method=Donut Chart -> Interaction=Hover tooltips -> Justification=Clearly shows part-to-whole relationship of the funding gap. 3. Hypotheses Toggle (JS): Goal=Compare strategic options -> Method=Clickable buttons showing/hiding details -> Interaction=User clicks to reveal info -> Justification=Engages the user in the decision-making process. 4. Complément d'information (HTML/CSS): Goal=Inform on personal motivations and challenges -> Method=Structured text blocks in a card layout with bolded phrases for emphasis using <b> tags -> Interaction=None -> Justification=Provides essential qualitative context. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #333;
+        }
+        .section-title {
+            color: #C28F43;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .nav-link {
+            transition: color 0.2s;
+            position: relative;
+            padding-bottom: 4px;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #C28F43;
+            transition: width 0.3s ease-in-out;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        .btn-primary {
+            background-color: #3D405B;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #2c2e41;
+        }
+        .btn-secondary {
+            background-color: #E07A5F;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .btn-secondary:hover {
+            background-color: #d06344;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -31px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #F4F1DE;
+            border: 4px solid #C28F43;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-gray-800">Mon Conseil en Évolution Professionnelle</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#situation" class="nav-link text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Situation</a>
+                        <a href="#complement-info" class="nav-link text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Complément d'information</a>
+                        <a href="#projet" class="nav-link text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Projet</a>
+                        <a href="#plan" class="nav-link text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Plan d'Action</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <section id="situation" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2 section-title">Analyse de la Situation</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">Cette section résume le contexte professionnel et personnel qui motive la démarche de conseil. Elle met en lumière le parcours, les contraintes de santé et la problématique centrale à résoudre.</p>
+            
+            <div class="grid md:grid-cols-3 gap-8 items-start">
+                <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="card p-6">
+                        <h3 class="font-bold text-lg mb-2 text-gray-800">Profil</h3>
+                        <p class="text-gray-600"><strong class="font-semibold">Bénéficiaire :</strong> Mathilde PAISLEY</p>
+                        <p class="text-gray-600"><strong class="font-semibold">Expérience :</strong> 20 ans en RH, paie, SIRH</p>
+                        <p class="text-gray-600"><strong class="font-semibold">Statut récent :</strong> Création d'une société de conseil (Juin 2025)</p>
+                    </div>
+                    <div class="card p-6 bg-amber-50">
+                        <h3 class="font-bold text-lg mb-2 text-amber-800">Problématique Clé</h3>
+                        <p class="text-amber-700">Suite à un accident de travail et des séquelles au poignet, la reprise d'une activité impliquant une utilisation répétée de celui-ci est risquée. Un besoin de reconversion vers un métier adapté est essentiel.</p>
+                    </div>
+                </div>
+                
+                <div class="md:col-span-1">
+                    <div class="card p-6">
+                        <h3 class="font-bold text-lg mb-4 text-center text-gray-800">Parcours de Santé</h3>
+                        <div class="relative pl-8 border-l-2 border-dashed border-amber-300">
+                            <div class="timeline-item mb-8">
+                                <p class="font-semibold text-gray-700">16 Février 1999</p>
+                                <p class="text-sm text-gray-500">Accident du travail initial</p>
+                            </div>
+                            <div class="timeline-item mb-8">
+                                <p class="font-semibold text-gray-700">1er Juin 1999</p>
+                                <p class="text-sm text-gray-500">Première opération</p>
+                            </div>
+                            <div class="timeline-item mb-8">
+                                <p class="font-semibold text-gray-700">23 Juillet 2023</p>
+                                <p class="text-sm text-gray-500">Rechute accident du travail</p>
+                            </div>
+                             <div class="timeline-item mb-8">
+                                <p class="font-semibold text-gray-700">9 Octobre 2023</p>
+                                <p class="text-sm text-gray-500">Opération suite à la rechute</p>
+                            </div>
+                            <div class="timeline-item mb-8">
+                                <p class="font-semibold text-gray-700">28 Avril 2025</p>
+                                <p class="text-sm text-gray-500">Nouvelle rechute accident du travail</p>
+                            </div>
+                            <div class="timeline-item mb-8">
+                                <p class="font-semibold text-gray-700">19 Juin 2025</p>
+                                <p class="text-sm text-gray-500">Nouvelle opération chirurgicale</p>
+                            </div>
+                            <div class="timeline-item mb-8">
+                                <p class="font-semibold text-gray-700">Jusqu'au 30 Septembre 2025</p>
+                                <p class="text-sm text-gray-500">Arrêt de travail en cours</p>
+                            </div>
+                            <div class="timeline-item">
+                                <p class="font-semibold text-gray-700">22 Juillet 2025</p>
+                                <p class="text-sm text-gray-500">Début du service CEP</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="complement-info" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2 section-title">Complément d'information de Mathilde</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">Cette section apporte des précisions sur les motivations personnelles, les défis liés au handicap dans le parcours professionnel et les besoins d'accompagnement.</p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="card p-6">
+                    <h3 class="font-bold text-lg mb-2 text-gray-800">Pourquoi la formation SAP ?</h3>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li><b>Manque de connaissances en ERP :</b> C'est le principal manque dans mes compétences actuelles, malgré mon expérience.</li>
+                        <li><b>Faciliter la recherche d'emploi :</b> Me permettra de retrouver plus facilement du travail (CDI, CDD, freelance).</li>
+                        <li><b>Montée en compétence :</b> Une véritable opportunité d'améliorer mes qualifications.</li>
+                        <li><b>Rôle de Chef de projet :</b> En tant que chef de chef de projet, on manipule moins les outils, on est plus sur l'organisation et les réunions. Cette formation me rendra plus opérationnelle.</li>
+                        <li><b>Outils de prise de notes :</b> Des outils existent pour faciliter la prise de notes lors des réunions.</li>
+                    </ul>
+                </div>
+                <div class="card p-6">
+                    <h3 class="font-bold text-lg mb-2 text-gray-800">Défis liés au handicap et accompagnement</h3>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li><b>Accompagnement GIFIP :</b> J'ai l'intention de me faire accompagner par la <b>GIFIP</b> par la suite, lors de ma prise de poste, pour que celui-ci soit adapté à mon handicap.</li>
+                        <li><b>Impact sur les clients :</b> Mon handicap a été un problème dans mes postes précédents. Travaillant pour une <b>ESN ou un cabinet de français</b>, les clients subissaient mon handicap, ce qui a mené à trois fins de période d'essai.</li>
+                        <li><b>Compétence recherchée :</b> La compétence SAP est très demandée et cette formation m'ouvrira plus de portes.</li>
+                        <li><b>Intégration adaptée :</b> Avec cet accompagnement et cette compétence, je pourrai intégrer un poste chez des clients ou une entreprise finale en toute connaissance de cause de mon handicap, dans un cadre adapté en étant accompagnée en tant que <b>personne handicapée</b> sur ce métier.</li>
+                    </ul>
+                </div>
+                <div class="md:col-span-2 card p-6 bg-yellow-50">
+                    <h3 class="font-bold text-lg mb-2 text-yellow-800">Point sur la phase d'enquête métier</h3>
+                    <p class="text-yellow-700 mb-4">N'ayant pas pu réaliser d'entretiens en direct, j'ai <b>adapté ma démarche</b> pour approfondir ma connaissance des métiers du conseil SAP. J'ai axé mes recherches sur des <b>ressources en ligne</b> et des <b>événements virtuels</b> pour obtenir des informations fiables et récentes sur le secteur.</p>
+                    <p class="text-yellow-700 mb-4">Cette approche m'a permis de <b>reconfirmer mon intérêt</b> pour cette voie, en m'appuyant notamment sur des discussions que j'ai eues avec des consultants SAP dans le cadre de mes expériences professionnelles passées.</p>
+                    <p class="text-yellow-700 font-semibold mb-2">Les ressources consultées sont les suivantes :</p>
+                    <h4 class="font-bold text-md mb-1 text-yellow-800">1. Fiches métiers en ligne</h4>
+                    <ul class="list-disc list-inside text-yellow-700 space-y-1 ml-4 mb-4">
+                        <li><b>Pôle emploi :</b> Consultation des fiches métiers détaillées sur le site, notamment pour les postes de Consultant SAP et de Chef de projet.</li>
+                        <li><b>Apec :</b> Analyse des fiches et des études de l'Apec concernant les métiers du conseil et de l'IT, pour mieux comprendre les évolutions du marché et les compétences attendues.</li>
+                    </ul>
+                    <h4 class="font-bold text-md mb-1 text-yellow-800">2. Événements et témoignages virtuels</h4>
+                    <ul class="list-disc list-inside text-yellow-700 space-y-1 ml-4 mb-4">
+                        <li><b>Webinaires et conférences :</b> Participation à des webinaires organisés par des entreprises du secteur (par exemple, IBM, Capgemini) pour découvrir leurs activités et les perspectives de carrière.</li>
+                        <li><b>Salons virtuels de l'emploi :</b> Inscription et consultation des stands virtuels pour prendre connaissance des offres et des profils recherchés.</li>
+                    </ul>
+                    <p class="text-yellow-700">Cette démarche m'a permis de <b>valider l'adéquation de mon projet</b> avec la réalité du marché du travail et de structurer ma réflexion pour les prochaines étapes de mon évolution professionnelle.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="projet" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2 section-title">Le Projet de Formation</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">Le projet vise une reconversion vers un métier d'avenir, capitalisant sur l'expérience acquise tout en étant compatible avec les contraintes de santé. Voici les détails, les motivations et l'analyse financière.</p>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <div class="card p-6 mb-6">
+                        <h3 class="text-xl font-bold mb-3 text-gray-800">Devenir Consultante SAP</h3>
+                        <div class="space-y-2 text-gray-600">
+                            <p><strong class="font-semibold">🎯 Objectif :</strong> Obtenir une formation certifiante de consultante SAP.</p>
+                            <p><strong class="font-semibold">🕒 Durée :</strong> 450 heures (temps partiel, sur 6 mois max).</p>
+                            <p><strong class="font-semibold">💶 Coût total :</strong> 9 200 €.</p>
+                        </div>
+                    </div>
+                    <div class="grid sm:grid-cols-2 gap-6">
+                        <div class="card p-6">
+                            <h4 class="font-bold text-lg mb-2 text-gray-800">Motivations</h4>
+                            <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                <li>Monter en compétences sur un ERP demandé.</li>
+                                <li>Reprendre une activité rapidement.</li>
+                                <li>Renforcer l'employabilité et le potentiel de revenus.</li>
+                            </ul>
+                        </div>
+                        <div class="card p-6">
+                            <h4 class="font-bold text-lg mb-2 text-gray-800">Points d'Appui</h4>
+                            <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                <li>20 ans d'expérience en RH.</li>
+                                <li>Accompagnement post-formation (TJM 800€).</li>
+                                <li>Solides connaissances métier.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold text-center mb-4 text-gray-800">Analyse du Financement</h3>
+                    <div class="chart-container">
+                        <canvas id="fundingChart"></canvas>
+                    </div>
+                    <p class="text-center text-sm text-gray-500 mt-4">Le principal défi est de sécuriser le financement pour la partie non couverte par le co-financement envisagé.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="plan" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2 section-title">Plan d'Action Stratégique</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">Pour concrétiser ce projet, une stratégie claire a été définie. Explorez les options envisagées et les prochaines étapes concrètes pour atteindre l'objectif de financement et de reconversion.</p>
+
+            <div class="grid lg:grid-cols-5 gap-8">
+                <div class="lg:col-span-3">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800">Hypothèses de Financement</h3>
+                    <div class="flex space-x-4 mb-4 border-b">
+                        <button id="btn-hypo-a" class="hypothesis-btn py-2 px-4 font-semibold border-b-2 border-transparent focus:outline-none">a) Projet de Transition Pro (PTP)</button>
+                        <button id="btn-hypo-b" class="hypothesis-btn py-2 px-4 font-semibold border-b-2 border-transparent focus:outline-none">b) Recherche de Poste SIRH</button>
+                    </div>
+                    <div id="content-hypo-a" class="hypothesis-content card p-6">
+                        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full mb-3">Hypothèse Privilégiée</span>
+                        <h4 class="font-bold text-lg mb-2">Sécuriser le parcours via un PTP</h4>
+                        <p class="text-gray-600 mb-3">Cette option consiste à monter un dossier de Projet de Transition Professionnelle pour obtenir le financement principal.</p>
+                        <p class="text-600"><strong class="font-semibold">Raison du choix :</strong> C'est la voie la plus sécurisante face au risque de rechute d'accident du travail, car elle mène à un métier physiquement adapté.</p>
+                    </div>
+                    <div id="content-hypo-b" class="hypothesis-content card p-6 hidden">
+                        <span class="inline-block bg-red-100 text-red-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full mb-3">Hypothèse Secondaire</span>
+                        <h4 class="font-bold text-lg mb-2">Rechercher un poste de consultante SIRH paie</h4>
+                        <p class="text-gray-600 mb-3">Cette alternative consisterait à chercher un emploi directement avec les compétences actuelles.</p>
+                        <p class="text-gray-600"><strong class="font-semibold">Raison de l'écart :</strong> Le risque d'aggravation des séquelles au poignet est trop élevé, compromettant la durabilité de l'emploi.</p>
+                    </div>
+                </div>
+                <div class="lg:col-span-2 space-y-8">
+                     <div class="card p-6">
+                        <h3 class="text-xl font-bold mb-4 text-gray-800">Documents Supports</h3>
+                        <p class="text-gray-600 mb-4">Accédez à l'ensemble des documents pour votre projet de changement de métier ou de profession :</p>
+                        <a href="https://drive.google.com/drive/folders/1-Abt-jjMv-AzhZ2lL0nvvCX99ufR5Adt?usp=sharing" target="_blank" class="inline-flex items-center btn-primary py-2 px-4 rounded-md text-sm font-medium">
+                            Accéder aux documents
+                            <span class="ml-2">&#8599;</span> <!-- Unicode for external link arrow -->
+                        </a>
+                        <p class="text-xs text-gray-500 mt-2">Ce lien mène à un dossier Google Drive contenant les documents suivants :</p>
+                        <ul class="list-disc list-inside text-xs text-gray-500 mt-1 pl-4">
+                            <li>Besoins en main-d’œuvre_nombre de projets de recrutement en 2025 par région et par département_métie.csv</li>
+                            <li>Brochure_consultant+sap_s4hana+&+btp+v240725.pdf</li>
+                            <li>Devis détaillé de formation.pdf</li>
+                            <li>Ex matthilde paisley planning.pdf</li>
+                            <li>Grille comparative organismes de formation (008).pdf</li>
+                            <li>Non traite _ enquetes metiers.pdf</li>
+                            <li>Projet en ligne transition pro.docx</li>
+                            <li>Support d'aide à la réflexion pour votre projet de changement de métier ou de profession pour voter dossier ptp.pdf</li>
+                        </ul>
+                    </div>
+                     <div class="card p-6 h-full">
+                        <h3 class="text-xl font-bold mb-4 text-gray-800">Prochaines Étapes</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <span class="text-amber-600 mr-3 mt-1">➔</span>
+                                <div>
+                                    <h4 class="font-semibold text-gray-700">Réaliser des enquêtes métier</h4>
+                                    <p class="text-sm text-gray-500">Contacter des consultants SAP pour valider la vision du métier.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-amber-600 mr-3 mt-1">➔</span>
+                                <div>
+                                    <h4 class="font-semibold text-gray-700">Formaliser le projet</h4>
+                                    <p class="text-sm text-gray-500">Répondre aux questions du document de travail pour structurer l'argumentaire.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-amber-600 mr-3 mt-1">➔</span>
+                                <div>
+                                    <h4 class="font-semibold text-gray-700">Prochain RDV</h4>
+                                    <p class="text-sm text-gray-500">Le <strong class="font-bold">28 Septembre 2025 à 10h30 par téléphone</strong> pour faire le point et avancer sur le dossier.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm">
+            <p>Document de synthèse pour Mathilde PAISLEY - Conseillère : Catherine LAURENT (ID Formation)</p>
+            <p class="text-gray-200 mt-1">Opérateur : Avenir Actifs en Région Île-de-France</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            const fundingData = {
+                labels: ['Financement PTP à obtenir', 'Co-financement CRAMIF'],
+                datasets: [{
+                    label: 'Répartition du Financement',
+                    data: [7200, 2000],
+                    backgroundColor: [
+                        '#E07A5F',
+                        '#81B29A',
+                    ],
+                    borderColor: '#FDFBF8',
+                    borderWidth: 4,
+                    hoverOffset: 8
+                }]
+            };
+
+            const fundingConfig = {
+                type: 'doughnut',
+                data: fundingData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                font: {
+                                    family: "'Inter', sans-serif"
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(context.parsed);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '60%'
+                }
+            };
+
+            const fundingChartCtx = document.getElementById('fundingChart').getContext('2d');
+            new Chart(fundingChartCtx, fundingConfig);
+
+            const hypothesisBtns = document.querySelectorAll('.hypothesis-btn');
+            const hypothesisContents = document.querySelectorAll('.hypothesis-content');
+            const btnHypoA = document.getElementById('btn-hypo-a');
+            const btnHypoB = document.getElementById('btn-hypo-b');
+            const contentHypoA = document.getElementById('content-hypo-a');
+            const contentHypoB = document.getElementById('content-hypo-b');
+
+            function setActiveHypothesis(activeBtn, activeContent) {
+                hypothesisBtns.forEach(btn => {
+                    btn.classList.remove('text-amber-600', 'border-amber-600');
+                    btn.classList.add('text-gray-500');
+                });
+                hypothesisContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+
+                activeBtn.classList.add('text-amber-600', 'border-amber-600');
+                activeBtn.classList.remove('text-gray-500');
+                activeContent.classList.remove('hidden');
+            }
+
+            btnHypoA.addEventListener('click', () => setActiveHypothesis(btnHypoA, contentHypoA));
+            btnHypoB.addEventListener('click', () => setActiveHypothesis(btnHypoB, contentHypoB));
+
+            setActiveHypothesis(btnHypoA, contentHypoA);
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 80) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
