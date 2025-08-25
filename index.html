@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Warm Neutrals -->
-    <!-- Application Structure Plan: A narrative, single-page scrolling application that guides the user through the story. It starts with the 'Situation' (the problem), moves to the 'Projet' (the proposed solution), and finishes with the 'Plan d'Action' (the execution). A new 'Complément d'information' section is added after the 'Situation' to provide deeper personal context and challenges, with specific phrases now highlighted in bold for emphasis. The 'Difficulté des enquêtes métier' section has been replaced with a more positive 'Point sur la phase d'enquête métier', detailing adapted research methods and now correctly using <b> tags for emphasis. This structure is more intuitive for a personal case file than a data-heavy dashboard. Key interactions include a visual timeline for the backstory, a funding breakdown chart, and an interactive toggle to compare the strategic hypotheses. This flow makes the information digestible and focuses on the journey towards the goal. -->
+    <!-- Application Structure Plan: A narrative, single-page scrolling application that guides the user through the story. It starts with the 'Situation' (the problem), moves to the 'Projet' (the proposed solution), and finishes with the 'Plan d'Action' (the execution). A new 'Complément d'information' section is added after the 'Situation' to provide deeper personal context and challenges, with specific phrases now highlighted in bold for emphasis. The 'Difficulté des enquêtes métier' section has been replaced with a more positive 'Point sur la phase d'enquête métier', detailing adapted research methods and now correctly using <b> tags for emphasis. The 'Prochaines Étapes' card now takes full width within its grid column and its height adjusts to its content, with a line break for better readability. This structure is more intuitive for a personal case file than a data-heavy dashboard. Key interactions include a visual timeline for the backstory, a funding breakdown chart, and an interactive toggle to compare the strategic hypotheses. This flow makes the information digestible and focuses on the journey towards the goal. -->
     <!-- Visualization & Content Choices: 1. Timeline (HTML/CSS): Goal=Inform on health history -> Method=Vertical timeline -> Interaction=None, visual clarity is key -> Justification=Best way to show chronological events. 2. Funding Donut Chart (Chart.js): Goal=Compare cost vs. funding -> Method=Donut Chart -> Interaction=Hover tooltips -> Justification=Clearly shows part-to-whole relationship of the funding gap. 3. Hypotheses Toggle (JS): Goal=Compare strategic options -> Method=Clickable buttons showing/hiding details -> Interaction=User clicks to reveal info -> Justification=Engages the user in the decision-making process. 4. Complément d'information (HTML/CSS): Goal=Inform on personal motivations and challenges -> Method=Structured text blocks in a card layout with bolded phrases for emphasis using <b> tags -> Interaction=None -> Justification=Provides essential qualitative context. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
@@ -201,13 +201,16 @@
                     <p class="text-yellow-700 font-semibold mb-2">Les ressources consultées sont les suivantes :</p>
                     <h4 class="font-bold text-md mb-1 text-yellow-800">1. Fiches métiers en ligne</h4>
                     <ul class="list-disc list-inside text-yellow-700 space-y-1 ml-4 mb-4">
-                        <li><b>Pôle emploi :</b> Consultation des fiches métiers détaillées sur le site, notamment pour les postes de Consultant SAP et de Chef de projet.</li>
-                        <li><b>Apec :</b> Analyse des fiches et des études de l'Apec concernant les métiers du conseil et de l'IT, pour mieux comprendre les évolutions du marché et les compétences attendues.</li>
+                        <li><a href="https://candidat.francetravail.fr/metierscope/fiche-metier/M1881/chef-cheffe-de-projet-maitrise-ouvrage-des-systemes-information-moa" target="_blank" class="text-blue-700 hover:underline"><b>Chef / Cheffe de projet Maîtrise d'Ouvrage des Systèmes d'Information (MOA)</b></a></li>
+                        <li><a href="https://candidat.francetravail.fr/metierscope/fiche-metier/M1806/consultant-fonctionnel-consultante-fonctionnelle-des-systemes-information" target="_blank" class="text-blue-700 hover:underline"><b>Consultant fonctionnel / Consultante fonctionnelle des systèmes d'information</b></a></li>
+                        <li><a href="https://www.apec.fr/tous-nos-metiers/informatique/consultant-maitrise-douvrage.html" target="_blank" class="text-blue-700 hover:underline"><b>Consultant maîtrise d'ouvrage F/H</b></a></li>
+                        <li><a href="https://www.apec.fr/tous-nos-metiers/informatique/chef-de-projet-informatique.html" target="_blank" class="text-blue-700 hover:underline"><b>Chef de projet informatique F/H</b></a></li>
+                        <li><a href="https://www.apec.fr/tous-nos-metiers/informatique/consultant-technique-progiciel.html" target="_blank" class="text-blue-700 hover:underline"><b>Consultant technique progiciel F/H</b></a></li>
                     </ul>
                     <h4 class="font-bold text-md mb-1 text-yellow-800">2. Événements et témoignages virtuels</h4>
                     <ul class="list-disc list-inside text-yellow-700 space-y-1 ml-4 mb-4">
-                        <li><b>Webinaires et conférences :</b> Participation à des webinaires organisés par des entreprises du secteur (par exemple, IBM, Capgemini) pour découvrir leurs activités et les perspectives de carrière.</li>
-                        <li><b>Salons virtuels de l'emploi :</b> Inscription et consultation des stands virtuels pour prendre connaissance des offres et des profils recherchés.</li>
+                        <li><a href="https://webikeo.fr/webinar/quelles-competences-cles-pour-le-chef-de-projet-digital-du-futur" target="_blank" class="text-blue-700 hover:underline"><b>Webinaire : Quelles compétences clés pour le chef de projet digital du futur ?</b></a></li>
+                        <li><b>Salons virtuels de l'emploi :</b> J'ai exploré les salons en ligne qui permettent de prendre connaissance des offres et des profils recherchés sans se déplacer. (<a href="https://salonenligne.francetravail.fr/candidat/" target="_blank" class="text-blue-700 hover:underline">Plateforme France Travail</a>)</li>
                     </ul>
                     <p class="text-yellow-700">Cette démarche m'a permis de <b>valider l'adéquation de mon projet</b> avec la réalité du marché du travail et de structurer ma réflexion pour les prochaines étapes de mon évolution professionnelle.</p>
                 </div>
@@ -301,7 +304,7 @@
                             <li>Support d'aide à la réflexion pour votre projet de changement de métier ou de profession pour voter dossier ptp.pdf</li>
                         </ul>
                     </div>
-                     <div class="card p-6 h-full">
+                     <div class="card p-6 h-auto w-full">
                         <h3 class="text-xl font-bold mb-4 text-gray-800">Prochaines Étapes</h3>
                         <ul class="space-y-4">
                             <li class="flex items-start">
@@ -322,7 +325,7 @@
                                 <span class="text-amber-600 mr-3 mt-1">➔</span>
                                 <div>
                                     <h4 class="font-semibold text-gray-700">Prochain RDV</h4>
-                                    <p class="text-sm text-gray-500">Le <strong class="font-bold">28 Septembre 2025 à 10h30 par téléphone</strong> pour faire le point et avancer sur le dossier.</p>
+                                    <p class="text-sm text-gray-500">Le <strong class="font-bold">28 Septembre 2025 à 10h30 par téléphone</strong><br>pour faire le point et avancer sur le dossier.</p>
                                 </div>
                             </li>
                         </ul>
