@@ -10,8 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Warm Neutrals -->
-    <!-- Application Structure Plan: A narrative, single-page scrolling application that guides the user through the story. It starts with the 'Situation' (the problem), moves to the 'Projet' (the proposed solution), and finishes with the 'Plan d'Action' (the execution). A new 'Complément d'information' section is added after the 'Situation' to provide deeper personal context and challenges, with specific phrases now highlighted in bold for emphasis. The 'Difficulté des enquêtes métier' section has been replaced with a more positive 'Point sur la phase d'enquête métier', detailing adapted research methods and now correctly using <b> tags for emphasis. The 'Prochaines Étapes' card now takes full width within its grid column and its height adjusts to its content, with a line break for better readability. This structure is more intuitive for a personal case file than a data-heavy dashboard. Key interactions include a visual timeline for the backstory, a funding breakdown chart, and an interactive toggle to compare the strategic hypotheses. This flow makes the information digestible and focuses on the journey towards the goal. -->
-    <!-- Visualization & Content Choices: 1. Timeline (HTML/CSS): Goal=Inform on health history -> Method=Vertical timeline -> Interaction=None, visual clarity is key -> Justification=Best way to show chronological events. 2. Funding Donut Chart (Chart.js): Goal=Compare cost vs. funding -> Method=Donut Chart -> Interaction=Hover tooltips -> Justification=Clearly shows part-to-whole relationship of the funding gap. 3. Hypotheses Toggle (JS): Goal=Compare strategic options -> Method=Clickable buttons showing/hiding details -> Interaction=User clicks to reveal info -> Justification=Engages the user in the decision-making process. 4. Complément d'information (HTML/CSS): Goal=Inform on personal motivations and challenges -> Method=Structured text blocks in a card layout with bolded phrases for emphasis using <b> tags -> Interaction=None -> Justification=Provides essential qualitative context. -->
+    <!-- Application Structure Plan: A narrative, single-page scrolling application that guides the user through the story. It starts with the 'Situation' (the problem), moves to 'Complément d'information', then to new 'Offres d'emploi et opportunités' and 'Étapes clés du suivi CEP' sections, followed by the 'Projet' (the proposed solution), and finishes with the 'Plan d'Action' (the execution). The new sections provide dedicated, structured blocks for job search links and a simplified list of CEP follow-up steps. This structure is more intuitive for a personal case file than a data-heavy dashboard. Key interactions include a visual timeline for the backstory, a funding breakdown chart, and an interactive toggle to compare the strategic hypotheses. The 'Étapes clés du suivi CEP' section now features an interactive checklist with a progress bar and local storage persistence. This flow makes the information digestible and focuses on the journey towards the goal. -->
+    <!-- Visualization & Content Choices: 1. Timeline (HTML/CSS): Goal=Inform on health history -> Method=Vertical timeline -> Interaction=None, visual clarity is key -> Justification=Best way to show chronological events. 2. Funding Donut Chart (Chart.js): Goal=Compare cost vs. funding -> Method=Donut Chart -> Interaction=Hover tooltips -> Justification=Clearly shows part-to-whole relationship of the funding gap. 3. Hypotheses Toggle (JS): Goal=Compare strategic options -> Method=Clickable buttons showing/hiding details -> Interaction=User clicks to reveal info -> Justification=Engages the user in the decision-making process. 4. Complément d'information (HTML/CSS): Goal=Inform on personal motivations and challenges -> Method=Structured text blocks in a card layout with bolded phrases for emphasis using <b> tags -> Interaction=None -> Justification=Provides essential qualitative context. 5. Offres d'emploi et opportunités (HTML/CSS): Goal=Provide job search resources -> Method=Structured lists with embedded links -> Interaction=Direct links -> Justification=Consolidates external job search resources for easy access. 6. Étapes clés du suivi CEP (HTML/CSS/JS): Goal=Outline PTP process steps and track completion -> Method=Interactive checklist with progress bar and local storage -> Interaction=Check/uncheck items, progress updates dynamically and persists locally -> Justification=Simplifies complex process into actionable steps, provides visual feedback on progress, and ensures state persistence. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
@@ -87,6 +87,46 @@
             height: 350px;
             max-height: 400px;
         }
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+        .checkbox-item input[type="checkbox"] {
+            margin-top: 0.25rem;
+            margin-right: 0.75rem;
+            min-width: 1.25rem; /* Ensure checkbox is not too small */
+            min-height: 1.25rem; /* Ensure checkbox is not too small */
+            accent-color: #81B29A; /* Custom color for checked state */
+        }
+        .checkbox-item label {
+            flex-grow: 1;
+            cursor: pointer;
+            line-height: 1.5;
+        }
+        .checkbox-item input[type="checkbox"]:checked + label {
+            text-decoration: line-through;
+            color: #6b7280; /* Gray out completed tasks */
+        }
+        .progress-bar-container {
+            background-color: #e0e0e0;
+            border-radius: 9999px;
+            height: 1.5rem;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        .progress-bar {
+            background-color: #81B29A;
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 0.5s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
     </style>
 </head>
 <body>
@@ -100,6 +140,8 @@
                     <div class="ml-10 flex items-baseline space-x-4">
                         <a href="#situation" class="nav-link text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Situation</a>
                         <a href="#complement-info" class="nav-link text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Complément d'information</a>
+                        <a href="#offres-emploi" class="nav-link text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Offres d'emploi</a>
+                        <a href="#etapes-suivi-cep" class="nav-link text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Suivi CEP</a>
                         <a href="#projet" class="nav-link text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Projet</a>
                         <a href="#plan" class="nav-link text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Plan d'Action</a>
                     </div>
@@ -217,6 +259,49 @@
             </div>
         </section>
 
+        <section id="offres-emploi" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2 section-title">Offres d'emploi et opportunités</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">Cette section regroupe les liens essentiels pour la recherche d'offres d'emploi, afin de documenter les opportunités professionnelles correspondant à votre projet.</p>
+
+            <div class="card p-6">
+                <h3 class="font-bold text-lg mb-2 text-gray-800">Liens utiles pour la recherche d'emploi :</h3>
+                <ul class="list-disc list-inside text-gray-600 space-y-4">
+                    <li><b>1. Emplois de Consultant SAP S/4HANA & BTP :</b>
+                        <ul class="list-square list-inside ml-6 space-y-1 mt-1">
+                            <li>Missions freelance et emplois SAP S/4HANA : <a href="https://www.free-work.com/fr/tech-it/jobs/sap-s-4hana-2" target="_blank" class="text-blue-700 hover:underline">free-work.com</a></li>
+                            <li>Offres d'emploi Consultant SAP : <a href="https://www.hellowork.com/fr-fr/emploi/metier_consultant-sap-ville_paris-75000.html" target="_blank" class="text-blue-700 hover:underline">hellowork.com</a></li>
+                            <li>Offres d'emploi sur l'Apec : <a href="https://www.apec.fr/candidat/recherche-emploi.html/emploi?motsCles=Consultant%20SAP%20S4%20HANA" target="_blank" class="text-blue-700 hover:underline">apec.fr</a></li>
+                        </ul>
+                    </li>
+                    <li><b>2. Emplois liés à la Transformation Digitale et au No-Code :</b>
+                        <ul class="list-square list-inside ml-6 space-y-1 mt-1">
+                            <li>Consultant en transformation digitale : <a href="https://www.welcometothejungle.com/fr/pages/emploi-consultant-transformation-digitale" target="_blank" class="text-blue-700 hover:underline">welcometothejungle.com</a></li>
+                            <li>Chef de projet transformation numérique : <a href="https://www.apec.fr/candidat/recherche-emploi.html/emploi?motsCles=Chef%20de%20Projet%20Transformation%20Digitale" target="_blank" class="text-blue-700 hover:underline">apec.fr</a></li>
+                            <li>Développeur No-Code / Product builder : <a href="https://fr.jooble.org/emploi-d%C3%A9veloppeur-no-code/Paris" target="_blank" class="text-blue-700 hover:underline">jooble.org</a></li>
+                            <li>Consultant Low-code & IA : <a href="https://fr.indeed.com/q-no-code-consultant-emplois.html" target="_blank" class="text-blue-700 hover:underline">indeed.com</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="etapes-suivi-cep" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2 section-title">Étapes clés du suivi CEP</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">Voici un récapitulatif des étapes pour constituer votre dossier PTP et assurer le suivi de votre projet, comme convenu avec votre conseillère. Cochez les étapes au fur et à mesure de leur réalisation.</p>
+
+            <div class="card p-6">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar" style="width: 0%;">0%</div>
+                </div>
+                <h3 class="font-bold text-lg mb-4 text-gray-800">Processus PTP (Projet de Transition Professionnelle)</h3>
+                <p class="text-gray-600 mb-4">Pour créer votre espace Transition Pro : <a href="https://atnet.transitionspro-idf.fr/" target="_blank" class="text-blue-700 hover:underline">https://atnet.transitionspro-idf.fr/</a></p>
+                
+                <div id="cepChecklist" class="space-y-2">
+                    <!-- Checklist items will be rendered here by JavaScript -->
+                </div>
+            </div>
+        </section>
+
         <section id="projet" class="mb-20">
             <h2 class="text-3xl font-bold text-center mb-2 section-title">Le Projet de Formation</h2>
             <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">Le projet vise une reconversion vers un métier d'avenir, capitalisant sur l'expérience acquise tout en étant compatible avec les contraintes de santé. Voici les détails, les motivations et l'analyse financière.</p>
@@ -294,6 +379,7 @@
                         </a>
                         <p class="text-xs text-gray-500 mt-2">Ce lien mène à un dossier Google Drive contenant les documents suivants :</p>
                         <ul class="list-disc list-inside text-xs text-gray-500 mt-1 pl-4">
+                            <li>Médecin généraliste accord suivi de formation pendant mon absence arrêt maladie accident du travail</li>
                             <li>Besoins en main-d’œuvre_nombre de projets de recrutement en 2025 par région et par département_métie.csv</li>
                             <li>Brochure_consultant+sap_s4hana+&+btp+v240725.pdf</li>
                             <li>Devis détaillé de formation.pdf</li>
@@ -443,6 +529,124 @@
                     }
                 });
             });
+
+            // CEP Checklist Logic
+            const cepSteps = [
+                { id: 'step1', text: 'Identifier et rencontrer un organisme de formation qui prépare au Titre professionnel/ diplôme.', completed: false },
+                { id: 'step2', text: 'Faire l’entretien de positionnement.', completed: false },
+                { id: 'step3', text: 'Demander l’autorisation d’absence à l\'employeur en A/R (du médecin).', completed: true }, // Marked as true based on user input
+                { id: 'step4', text: 'Compléter les éléments constituant le dossier PTP :', subSteps: [
+                    { id: 'substep4a', text: 'Enquêtes métier (x3 mini).', completed: false }, // User mentioned not completed
+                    { id: 'substep4b', text: 'Sélectionner des offres d’emploi qui correspondent à votre profil.', completed: true }, // User mentioned completed
+                    { id: 'substep4c', text: 'Chercher les statistiques du marché de l’emploi (IMT) en région parisienne.', completed: true }, // User mentioned completed
+                    { id: 'substep4d', text: 'Compléter le support d’aide à la réflexion.', completed: true }, // User mentioned completed
+                    { id: 'substep4e', text: 'Répondre aux 4 questions en ligne (doc Word).', completed: true } // User mentioned completed
+                ]},
+                { id: 'step5', text: 'Me faire parvenir le tout par courriel pour relecture lors de notre prochain rdv.', completed: false },
+                { id: 'step6', text: 'Compléter le volet bénéficiaire sur votre espace perso de Transitions Pro.', completed: false },
+                { id: 'step7', text: 'Mettre en ligne les documents de travail PTP lorsque supervisés.', completed: false },
+                { id: 'step8', text: 'Compléter le volet organisme de formation et envoyer la demande en ligne.', completed: false },
+                { id: 'step9', text: 'Attendre la validation de l’organisme de formation.', completed: false },
+                { id: 'step10', text: 'Envoyer la partie destinée à l’employeur, mais cette fois via votre espace perso.', completed: false },
+                { id: 'step11', text: 'Valider l’envoi du dossier en commission (il y a un bouton pour ça).', completed: false },
+                { id: 'step12', text: 'Contrôler que le dossier est bien pris en charge dans les 72 heures (en vous connectant sur le site).', completed: false },
+                { id: 'step13', text: 'Deux mois plus tard : réponse de la commission (toujours sur le site vs mail ou courrier postal).', completed: false },
+                { id: 'step14', text: 'Si positif : signer la convention que vous recevrez et la renvoyer (toujours via site Transitions Pro).', completed: false }
+            ];
+
+            const cepChecklistDiv = document.getElementById('cepChecklist');
+            const progressBar = document.getElementById('progressBar');
+            const localStorageKey = 'cepChecklistState';
+
+            function loadChecklistState() {
+                const savedState = localStorage.getItem(localStorageKey);
+                if (savedState) {
+                    const parsedState = JSON.parse(savedState);
+                    // Merge saved states into cepSteps
+                    cepSteps.forEach(step => {
+                        const savedStep = parsedState.find(s => s.id === step.id);
+                        if (savedStep) {
+                            if (step.subSteps && savedStep.subSteps) {
+                                step.subSteps.forEach(subStep => {
+                                    const savedSubStep = savedStep.subSteps.find(ss => ss.id === subStep.id);
+                                    if (savedSubStep) {
+                                        subStep.completed = savedSubStep.completed;
+                                    }
+                                });
+                            } else {
+                                step.completed = savedStep.completed;
+                            }
+                        }
+                    });
+                }
+            }
+
+            function saveChecklistState() {
+                localStorage.setItem(localStorageKey, JSON.stringify(cepSteps));
+            }
+
+            function renderChecklist() {
+                cepChecklistDiv.innerHTML = '';
+                let totalTasks = 0;
+                let completedTasks = 0;
+
+                cepSteps.forEach(step => {
+                    if (step.subSteps) {
+                        const mainStepDiv = document.createElement('div');
+                        mainStepDiv.className = 'mb-2';
+                        mainStepDiv.innerHTML = `<p class="font-semibold text-gray-700">${step.text}</p>`;
+                        cepChecklistDiv.appendChild(mainStepDiv);
+
+                        step.subSteps.forEach(subStep => {
+                            totalTasks++;
+                            if (subStep.completed) completedTasks++;
+
+                            const subItemDiv = document.createElement('div');
+                            subItemDiv.className = 'checkbox-item ml-6';
+                            subItemDiv.innerHTML = `
+                                <input type="checkbox" id="${subStep.id}" ${subStep.completed ? 'checked' : ''}>
+                                <label for="${subStep.id}">${subStep.text}</label>
+                            `;
+                            subItemDiv.querySelector('input').addEventListener('change', (event) => {
+                                subStep.completed = event.target.checked;
+                                saveChecklistState();
+                                updateProgress();
+                            });
+                            cepChecklistDiv.appendChild(subItemDiv);
+                        });
+                    } else {
+                        totalTasks++;
+                        if (step.completed) completedTasks++;
+
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'checkbox-item';
+                        itemDiv.innerHTML = `
+                            <input type="checkbox" id="${step.id}" ${step.completed ? 'checked' : ''}>
+                            <label for="${step.id}">${step.text}</label>
+                        `;
+                        itemDiv.querySelector('input').addEventListener('change', (event) => {
+                            step.completed = event.target.checked;
+                            saveChecklistState();
+                            updateProgress();
+                        });
+                        cepChecklistDiv.appendChild(itemDiv);
+                    }
+                });
+                updateProgress(totalTasks, completedTasks);
+            }
+
+            function updateProgress(totalTasks, completedTasks) {
+                const currentTotalTasks = totalTasks || cepSteps.reduce((acc, step) => acc + (step.subSteps ? step.subSteps.length : 1), 0);
+                const currentCompletedTasks = completedTasks || cepSteps.reduce((acc, step) => acc + (step.subSteps ? step.subSteps.filter(s => s.completed).length : (step.completed ? 1 : 0)), 0);
+
+                const percentage = currentTotalTasks > 0 ? Math.round((currentCompletedTasks / currentTotalTasks) * 100) : 0;
+                progressBar.style.width = `${percentage}%`;
+                progressBar.textContent = `${percentage}%`;
+            }
+
+            loadChecklistState(); // Load state before rendering
+            renderChecklist(); // Initial render
+            saveChecklistState(); // Save initial state if none existed
         });
     </script>
 </body>
